@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MobyLabWebProgramming.Core.Entities
+{
+    public class Recipe: BaseEntity
+    {
+        public string Name { get; set; } = default!;
+        public string Description { get; set; } = default!;
+        public string ImagePath { get; set; } = default!;
+        public string VideoPath { get; set; } = default!;
+        public int Servings { get; set; } = 0;
+        public int PrepTime { get; set; } = 0;
+        public int CookTime { get; set; } = 0;
+        public int TotalTime { get; set; } = 0;
+        public ICollection<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
+        public string Instructions { get; set; } = default!;
+    }
+}
