@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MobyLabWebProgramming.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +18,7 @@ namespace MobyLabWebProgramming.Core.DataTransferObjects
         public double Quantity { get; set; } = 0;
         public string Unit { get; set; } = default!;
         public DateTime ExpiryDate { get; set; } = DateTime.Today;
+
+        public ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
     }
 }

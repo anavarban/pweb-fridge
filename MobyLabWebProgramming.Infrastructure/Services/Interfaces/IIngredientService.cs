@@ -1,4 +1,5 @@
 ﻿using MobyLabWebProgramming.Core.DataTransferObjects;
+using MobyLabWebProgramming.Core.Requests;
 using MobyLabWebProgramming.Core.Responses;
 using System;
 using System.Collections.Generic;
@@ -8,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace MobyLabWebProgramming.Infrastructure.Services.Interfaces
 {
-    internal interface IIngredientService
+    public interface IIngredientService
     {
         public Task<ServiceResponse<IngredientDTO>> GetIngredient(Guid id, CancellationToken cancellationToken = default);
 
-        public Task<ServiceResponse<IEnumerable<IngredientDTO>>> GetIngredients(CancellationToken cancellationToken = default);
+        public Task<ServiceResponse<PagedResponse<IngredientDTO>>> GetIngredients(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default);
 
-        public Task<ServiceResponse<IngredientDTO>> CreateIngredient(IngredientDTO ingredientDTO, CancellationToken cancellationToken = default);
+        public Task<ServiceResponse> CreateIngredient(IngredientDTO ingredientDTO, CancellationToken cancellationToken = default);
 
-        public Task<ServiceResponse<IngredientDTO>> UpdateIngredient(Guid id, IngredientDTO ingredientDTO, CancellationToken cancellationToken = default);
+        public Task<ServiceResponse> UpdateIngredient(Guid id, IngredientDTO ingredientDTO, CancellationToken cancellationToken = default);
 
-        public Task<ServiceResponse<IngredientDTO>> DeleteIngredient(Guid id, CancellationToken cancellationToken = default);
+        public Task<ServiceResponse> DeleteIngredient(Guid id, CancellationToken cancellationToken = default);
     }
 }

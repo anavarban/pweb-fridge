@@ -24,16 +24,7 @@ namespace MobyLabWebProgramming.Core.Specifications
             PrepTime = e.PrepTime,
             CookTime = e.CookTime,
             TotalTime = e.TotalTime,
-            Ingredients = e.Ingredients.Select(i => new IngredientDTO
-            {
-                Id = i.Id,
-                Name = i.Name,
-                Description = i.Description,
-                ImagePath = i.ImagePath,
-                Quantity = i.Quantity,
-                Unit = i.Unit,
-                ExpiryDate = i.ExpiryDate
-            }).ToList(),
+            Ingredients = e.Ingredients,
             Instructions = e.Instructions
         };
         public RecipeProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
@@ -54,7 +45,7 @@ namespace MobyLabWebProgramming.Core.Specifications
 
             var searchExpr = $"%{search.Replace(" ", "%")}%";
 
-            Query.Where(e => EF.Functions.ILike(e.Name, searchExpr) || EF.Functions.ILike(e.Description, searchExpr);
+            Query.Where(e => EF.Functions.ILike(e.Name, searchExpr) || EF.Functions.ILike(e.Description, searchExpr));
         }
 
         public RecipeProjectionSpec(Ingredient ingredient)

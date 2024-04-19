@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MobyLabWebProgramming.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,6 @@ namespace MobyLabWebProgramming.Core.DataTransferObjects
         public Guid UserId { get; set; }
         public string Name { get; set; } = default!;
         public UserDTO User { get; set; } = default!;
-        public ICollection<IngredientDTO> Ingredients { get; set; } = default!;
+        public ICollection<Ingredient> Ingredients { get; set; } = default!;
     }
 }

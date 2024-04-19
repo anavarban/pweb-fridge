@@ -34,6 +34,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(e => e.UpdatedAt)
             .IsRequired();
         builder.HasOne(e => e.Fridge);
-        builder.HasMany<Recipe>(e => e.SavedRecipes);
     }
 }

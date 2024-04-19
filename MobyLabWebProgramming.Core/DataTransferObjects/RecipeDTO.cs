@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MobyLabWebProgramming.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,7 @@ namespace MobyLabWebProgramming.Core.DataTransferObjects
         public int PrepTime { get; set; } = 0;
         public int CookTime { get; set; } = 0;
         public int TotalTime { get; set; } = 0;
-        public ICollection<IngredientDTO> Ingredients { get; set; } = new List<IngredientDTO>();
+        public ICollection<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
         public string Instructions { get; set; } = default!;
     }
 }

@@ -22,6 +22,4 @@ public class User : BaseEntity
     public Fridge Fridge { get; set; } = default!;
 
     public Guid FridgeId { get; set; }
-
-    public ICollection<Recipe> SavedRecipes { get; set; } = default!;
 }
