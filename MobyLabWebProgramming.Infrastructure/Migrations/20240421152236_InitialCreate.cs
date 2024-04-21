@@ -13,6 +13,28 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                 .Annotation("Npgsql:PostgresExtension:unaccent", ",,");
 
             migrationBuilder.CreateTable(
+                name: "Recipe",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    ImagePath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    VideoPath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Servings = table.Column<int>(type: "integer", nullable: false),
+                    PrepTime = table.Column<int>(type: "integer", nullable: false),
+                    CookTime = table.Column<int>(type: "integer", nullable: false),
+                    TotalTime = table.Column<int>(type: "integer", nullable: false),
+                    Instructions = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recipe", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -53,34 +75,6 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Recipe",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    ImagePath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    VideoPath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Servings = table.Column<int>(type: "integer", nullable: false),
-                    PrepTime = table.Column<int>(type: "integer", nullable: false),
-                    CookTime = table.Column<int>(type: "integer", nullable: false),
-                    TotalTime = table.Column<int>(type: "integer", nullable: false),
-                    Instructions = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Recipe", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Recipe_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserFile",
                 columns: table => new
                 {
@@ -115,6 +109,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     Unit = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     ExpiryDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     FridgeId = table.Column<Guid>(type: "uuid", nullable: true),
+                    RecipeId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
@@ -126,30 +121,11 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         column: x => x.FridgeId,
                         principalTable: "Fridge",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "IngredientRecipe",
-                columns: table => new
-                {
-                    IngredientsId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RecipesId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IngredientRecipe", x => new { x.IngredientsId, x.RecipesId });
                     table.ForeignKey(
-                        name: "FK_IngredientRecipe_Ingredient_IngredientsId",
-                        column: x => x.IngredientsId,
-                        principalTable: "Ingredient",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_IngredientRecipe_Recipe_RecipesId",
-                        column: x => x.RecipesId,
+                        name: "FK_Ingredient_Recipe_RecipeId",
+                        column: x => x.RecipeId,
                         principalTable: "Recipe",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -164,14 +140,9 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                 column: "FridgeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IngredientRecipe_RecipesId",
-                table: "IngredientRecipe",
-                column: "RecipesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Recipe_UserId",
-                table: "Recipe",
-                column: "UserId");
+                name: "IX_Ingredient_RecipeId",
+                table: "Ingredient",
+                column: "RecipeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserFile_UserId",
@@ -182,19 +153,16 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "IngredientRecipe");
+                name: "Ingredient");
 
             migrationBuilder.DropTable(
                 name: "UserFile");
 
             migrationBuilder.DropTable(
-                name: "Ingredient");
+                name: "Fridge");
 
             migrationBuilder.DropTable(
                 name: "Recipe");
-
-            migrationBuilder.DropTable(
-                name: "Fridge");
 
             migrationBuilder.DropTable(
                 name: "User");

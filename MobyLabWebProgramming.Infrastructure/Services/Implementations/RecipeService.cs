@@ -33,7 +33,6 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
                 Name = ingredient.Name,
                 Quantity = ingredient.Quantity,
                 ExpiryDate = ingredient.ExpiryDate,
-                Recipes = ingredient.Recipes
             }), cancellationToken);
 
             return result != null ?

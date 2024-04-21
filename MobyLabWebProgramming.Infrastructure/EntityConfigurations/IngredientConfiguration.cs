@@ -33,8 +33,6 @@ namespace MobyLabWebProgramming.Infrastructure.EntityConfigurations
             builder.Property(e => e.ExpiryDate)
                 .IsRequired();
 
-            builder.HasMany(e => e.Recipes)
-                .WithMany(e => e.Ingredients);
         }
     }
 }

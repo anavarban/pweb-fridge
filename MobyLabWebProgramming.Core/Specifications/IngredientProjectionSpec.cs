@@ -46,9 +46,5 @@ namespace MobyLabWebProgramming.Core.Specifications
             Query.Where(e => EF.Functions.ILike(e.Name, searchExpr) || EF.Functions.ILike(e.Description, searchExpr));
         }
 
-        public IngredientProjectionSpec(Recipe recipe)
-        {
-            Query.Where(e => e.Recipes.Contains(recipe));
-        }
     }
 }

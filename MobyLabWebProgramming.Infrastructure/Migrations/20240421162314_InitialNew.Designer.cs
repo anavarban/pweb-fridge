@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MobyLabWebProgramming.Infrastructure.Migrations
 {
     [DbContext(typeof(WebAppDatabaseContext))]
-    [Migration("20240414113748_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240421162314_InitialNew")]
+    partial class InitialNew
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,21 +24,6 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "unaccent");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("IngredientRecipe", b =>
-                {
-                    b.Property<Guid>("IngredientsId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("RecipesId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("IngredientsId", "RecipesId");
-
-                    b.HasIndex("RecipesId");
-
-                    b.ToTable("IngredientRecipe");
-                });
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Fridge", b =>
                 {
@@ -101,6 +86,9 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Property<double>("Quantity")
                         .HasColumnType("double precision");
 
+                    b.Property<Guid?>("RecipeId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Unit")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -112,6 +100,8 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("FridgeId");
+
+                    b.HasIndex("RecipeId");
 
                     b.ToTable("Ingredient");
                 });
@@ -159,17 +149,12 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("VideoPath")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Recipe");
                 });
@@ -252,21 +237,6 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.ToTable("UserFile");
                 });
 
-            modelBuilder.Entity("IngredientRecipe", b =>
-                {
-                    b.HasOne("MobyLabWebProgramming.Core.Entities.Ingredient", null)
-                        .WithMany()
-                        .HasForeignKey("IngredientsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MobyLabWebProgramming.Core.Entities.Recipe", null)
-                        .WithMany()
-                        .HasForeignKey("RecipesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Fridge", b =>
                 {
                     b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User")
@@ -283,13 +253,10 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Fridge", null)
                         .WithMany("Ingredients")
                         .HasForeignKey("FridgeId");
-                });
 
-            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Recipe", b =>
-                {
-                    b.HasOne("MobyLabWebProgramming.Core.Entities.User", null)
-                        .WithMany("SavedRecipes")
-                        .HasForeignKey("UserId");
+                    b.HasOne("MobyLabWebProgramming.Core.Entities.Recipe", null)
+                        .WithMany("Ingredients")
+                        .HasForeignKey("RecipeId");
                 });
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.UserFile", b =>
@@ -308,12 +275,15 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Navigation("Ingredients");
                 });
 
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Recipe", b =>
+                {
+                    b.Navigation("Ingredients");
+                });
+
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.User", b =>
                 {
                     b.Navigation("Fridge")
                         .IsRequired();
-
-                    b.Navigation("SavedRecipes");
 
                     b.Navigation("UserFiles");
                 });

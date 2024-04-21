@@ -60,8 +60,7 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
                     Quantity = result.Quantity,
                     Unit = result.Unit,
                     Description = result.Description,
-                    ImagePath = result.ImagePath,
-                    Recipes = result.Recipes
+                    ImagePath = result.ImagePath
                 }) :
                 ServiceResponse<IngredientDTO>.FromError(new(HttpStatusCode.NotFound, "Ingredient not found!", ErrorCodes.EntityNotFound));
         }

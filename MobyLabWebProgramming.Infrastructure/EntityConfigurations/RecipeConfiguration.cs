@@ -40,11 +40,9 @@ namespace MobyLabWebProgramming.Infrastructure.EntityConfigurations
                 .IsRequired();
             builder.Property(e => e.UpdatedAt)
                 .IsRequired();
-
-            builder.HasMany(e => e.Ingredients)
-                .WithMany(e => e.Recipes);
             builder.Property(e => e.Instructions)
                 .IsRequired();
+            builder.HasMany(e => e.Ingredients);
         }
     }
 }

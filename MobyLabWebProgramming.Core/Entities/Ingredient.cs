@@ -16,6 +16,5 @@ namespace MobyLabWebProgramming.Core.Entities
         public string Unit { get; set; } = default!;
         public DateTime ExpiryDate { get; set; } = DateTime.Today;
 
-        public ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
     }
 }
