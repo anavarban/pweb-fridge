@@ -37,6 +37,10 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
             {
 
                 var ingredients = fridge.Ingredients;
+                if (ingredients == null)
+                {
+                    ingredients = new List<Ingredient>();
+                }
                 ingredients.Add(ingredient);
                 fridge.Ingredients = ingredients;
 
@@ -63,7 +67,11 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
                 User = user
             };
 
+            user.Fridge = fridge;
+            user.FridgeId = fridge.Id;
+
             await _repository.AddAsync(fridge, cancellationToken);
+            await _repository.UpdateAsync(user, cancellationToken);
 
             return ServiceResponse.ForSuccess();
         }
@@ -152,21 +160,27 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
 
         public async Task<ServiceResponse<FridgeDTO>> GetFridge(Guid userId, CancellationToken cancellationToken)
         {
-            var user = await _repository.GetAsync<User>(new UserProjectionSpec(userId), cancellationToken);
+            var user = await _repository.GetAsync(new UserProjectionSpec(userId), cancellationToken);
 
             if (user == null)
             {
-                return (ServiceResponse<FridgeDTO>)ServiceResponse.FromError(new(HttpStatusCode.NotFound, "User not found!", ErrorCodes.EntityNotFound));
+                return ServiceResponse<FridgeDTO>.FromError(new(HttpStatusCode.NotFound, "User not found!", ErrorCodes.EntityNotFound));
             }
 
-            var fridge = new FridgeDTO
+            if (user.Fridge == null)
             {
-                Id = user.Fridge.Id,
-                Name = user.Fridge.Name,
-                Ingredients = user.Fridge.Ingredients
-            };
+                return ServiceResponse<FridgeDTO>.FromError(new(HttpStatusCode.NotFound, "Fridge not found!", ErrorCodes.EntityNotFound));
+            }
 
-            return ServiceResponse<FridgeDTO>.ForSuccess(fridge);
+            //var fridge = new FridgeDTO
+            //{
+            //    Id = user.Fridge.Id,
+            //    Name = user.Fridge.Name,
+            //    UserId = user.Id,
+            //    Ingredients = user.Fridge.Ingredients
+            //};
+
+            return ServiceResponse<FridgeDTO>.ForSuccess(user.Fridge);
         }
     }
 }

@@ -20,7 +20,16 @@ public sealed class UserProjectionSpec : BaseSpec<UserProjectionSpec, User, User
         Id = e.Id,
         Email = e.Email,
         Name = e.Name,
-        Role = e.Role
+        Role = e.Role,
+        Fridge = new FridgeDTO
+        {
+            Id = e.Fridge.Id,
+            Name = e.Fridge.Name,
+            UserId = e.Fridge.UserId,
+            CreatedAt = e.Fridge.CreatedAt,
+            UpdatedAt = e.Fridge.UpdatedAt,
+            Ingredients = e.Fridge.Ingredients,
+        },
     };
 
     public UserProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)

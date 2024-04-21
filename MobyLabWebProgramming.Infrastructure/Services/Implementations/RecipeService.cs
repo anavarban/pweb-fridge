@@ -48,6 +48,11 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
                 Name = recipe.Name,
                 Description = recipe.Description,
                 ImagePath = recipe.ImagePath,
+                VideoPath = recipe.VideoPath,
+                Servings = recipe.Servings,
+                PrepTime = recipe.PrepTime,
+                CookTime = recipe.CookTime,
+                TotalTime = recipe.TotalTime,
                 Ingredients = recipe.Ingredients,
                 Instructions = recipe.Instructions
             }, cancellationToken);

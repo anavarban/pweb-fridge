@@ -20,10 +20,16 @@ namespace MobyLabWebProgramming.Backend.Controllers
         }
 
         [Authorize]
-        [HttpGet("{user:guid}")]
-        public async Task<ActionResult<RequestResponse<FridgeDTO>>> GetUserFridge([FromRoute] Guid userId)
+        [HttpGet]
+        public async Task<ActionResult<RequestResponse<FridgeDTO>>> GetUserFridge()
         {
-            var response = await _fridgeService.GetFridge(userId);
+            var currentUser = await GetCurrentUser();
+            if (currentUser.Result == null)
+            {
+                return this.ErrorMessageResult<FridgeDTO>(currentUser.Error);
+            }
+
+            var response = await _fridgeService.GetFridge(currentUser.Result.Id);
 
             return response.Result != null ?
                 this.FromServiceResponse(response) :
@@ -31,46 +37,83 @@ namespace MobyLabWebProgramming.Backend.Controllers
         }
 
         [Authorize]
-        [HttpPost("{user:guid}")]
-        public async Task<ActionResult<RequestResponse>> AddIngredientToFridge([FromBody] Ingredient fridgeIngredient, [FromRoute] Guid userId)
+        [HttpPost]
+        public async Task<ActionResult<RequestResponse>> AddIngredientToFridge([FromBody] Ingredient fridgeIngredient)
         {
-            var fridge = await _fridgeService.GetFridge(userId);
+            var currentUser = await GetCurrentUser();
+            if (currentUser.Result == null)
+            {
+                return this.ErrorMessageResult(currentUser.Error);
+            }
 
-            return fridge.Result != null ?
-                this.FromServiceResponse(await _fridgeService.AddIngredientToFridge(fridge.Result.Id, fridgeIngredient)) :
+            var response = await _fridgeService.GetFridge(currentUser.Result.Id);
+
+            return response.Result != null ?
+                this.FromServiceResponse(await _fridgeService.AddIngredientToFridge(response.Result.Id, fridgeIngredient)) :
                 this.ErrorMessageResult();
         }
 
         [Authorize]
-        [HttpDelete("{user:guid}")]
-        public async Task<ActionResult<RequestResponse>> RemoveIngredientFromFridge([FromBody] Ingredient fridgeIngredient, [FromRoute] Guid userId)
+        [HttpPost]
+        public async Task<ActionResult<RequestResponse>> CreateFridge([FromBody] string fridgeName)
         {
-            var fridge = await _fridgeService.GetFridge(userId);
+            var currentUser = await GetCurrentUser();
+            if (currentUser.Result == null)
+            {
+                return this.ErrorMessageResult(currentUser.Error);
+            }
 
-            return fridge.Result != null ?
-                this.FromServiceResponse(await _fridgeService.RemoveIngredientFromFridge(fridge.Result.Id, fridgeIngredient.Id)) :
+            return this.FromServiceResponse(await _fridgeService.CreateFridge(currentUser.Result.Id, fridgeName));
+        }
+
+        [Authorize]
+        [HttpDelete]
+        public async Task<ActionResult<RequestResponse>> RemoveIngredientFromFridge([FromBody] Guid ingredientId)
+        {
+            var currentUser = await GetCurrentUser();
+            if (currentUser.Result == null)
+            {
+                return this.ErrorMessageResult(currentUser.Error);
+            }
+
+            var response = await _fridgeService.GetFridge(currentUser.Result.Id);
+
+            return response.Result != null ?
+                this.FromServiceResponse(await _fridgeService.RemoveIngredientFromFridge(response.Result.Id, ingredientId)) :
                 this.ErrorMessageResult();
         }
 
         [Authorize]
-        [HttpPut("{user:guid}")]
-        public async Task<ActionResult<RequestResponse>> UpdateIngredientInFridge([FromBody] FridgeIngredientUpdateDTO ingredient, [FromRoute] Guid userId)
+        [HttpPut]
+        public async Task<ActionResult<RequestResponse>> UpdateIngredientInFridge([FromBody] FridgeIngredientUpdateDTO ingredient)
         {
-            var fridge = await _fridgeService.GetFridge(userId);
+            var currentUser = await GetCurrentUser();
+            if (currentUser.Result == null)
+            {
+                return this.ErrorMessageResult(currentUser.Error);
+            }
 
-            return fridge.Result != null ?
-                this.FromServiceResponse(await _fridgeService.UpdateIngredientInFridge(fridge.Result.Id, ingredient.Id, ingredient.Quantity)) :
+            var response = await _fridgeService.GetFridge(currentUser.Result.Id);
+
+            return response.Result != null ?
+                this.FromServiceResponse(await _fridgeService.UpdateIngredientInFridge(response.Result.Id, ingredient.Id, ingredient.Quantity)) :
                 this.ErrorMessageResult();
         }
 
         [Authorize]
-        [HttpPut("{user:guid}")]
-        public async Task<ActionResult<RequestResponse>> UpdateIngredientExpiryDate([FromBody] FridgeIngredientUpdateDTO ingredient, [FromRoute] Guid userId)
+        [HttpPut]
+        public async Task<ActionResult<RequestResponse>> UpdateIngredientExpiryDate([FromBody] FridgeIngredientUpdateDTO ingredient)
         {
-            var fridge = await _fridgeService.GetFridge(userId);
+            var currentUser = await GetCurrentUser();
+            if (currentUser.Result == null)
+            {
+                return this.ErrorMessageResult(currentUser.Error);
+            }
 
-            return fridge.Result != null ?
-                this.FromServiceResponse(await _fridgeService.UpdateIngredientExpiryDate(fridge.Result.Id, ingredient.Id, ingredient.ExpiryDate)) :
+            var response = await _fridgeService.GetFridge(currentUser.Result.Id);
+
+            return response.Result != null ?
+                this.FromServiceResponse(await _fridgeService.UpdateIngredientExpiryDate(response.Result.Id, ingredient.Id, ingredient.ExpiryDate)) :
                 this.ErrorMessageResult();
         }
     }
