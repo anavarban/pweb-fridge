@@ -14,5 +14,5 @@ public class UserDTO
     public string Email { get; set; } = default!;
     public UserRoleEnum Role { get; set; } = default!;
 
-    public FridgeDTO Fridge { get; set; } = default!;
+    public FridgeDTO? Fridge { get; set; } = default!;
 }

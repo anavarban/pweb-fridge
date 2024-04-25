@@ -25,7 +25,7 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
             _repository = repository;
         }
 
-        public async Task<ServiceResponse> AddIngredientToFridge(Guid fridgeId, Ingredient ingredient, CancellationToken cancellationToken)
+        public async Task<ServiceResponse> AddIngredientToFridge(Guid fridgeId, Guid ingredientId, CancellationToken cancellationToken)
         {
             var fridge = await _repository.GetAsync<Fridge>(new FridgeProjectionSpec(fridgeId), cancellationToken);
 
@@ -35,6 +35,12 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
             }
             else
             {
+                var ingredient = await _repository.GetAsync<Ingredient>(new IngredientProjectionSpec(ingredientId), cancellationToken);
+
+                if (ingredient == null)
+                {
+                    return ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Ingredient not found!", ErrorCodes.EntityNotFound));
+                }
 
                 var ingredients = fridge.Ingredients;
                 if (ingredients == null)

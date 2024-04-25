@@ -14,5 +14,6 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Interfaces
 
         public Task<ServiceResponse<RecipeDTO>> GetRecipeWithIngredient(IngredientDTO ingredient, CancellationToken cancellationToken = default);
 
+        public Task<ServiceResponse> DeleteRecipe(Guid id,UserDTO? requestingUser, CancellationToken cancellationToken = default);
     }
 }

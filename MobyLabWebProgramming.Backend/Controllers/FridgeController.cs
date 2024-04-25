@@ -38,7 +38,7 @@ namespace MobyLabWebProgramming.Backend.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<RequestResponse>> AddIngredientToFridge([FromBody] Ingredient fridgeIngredient)
+        public async Task<ActionResult<RequestResponse>> AddIngredientToFridge([FromBody] Guid fridgeIngredient)
         {
             var currentUser = await GetCurrentUser();
             if (currentUser.Result == null)

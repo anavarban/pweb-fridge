@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MobyLabWebProgramming.Infrastructure.Migrations
 {
     [DbContext(typeof(WebAppDatabaseContext))]
-    [Migration("20240421154235_Newwwww")]
-    partial class Newwwww
+    [Migration("20240421175946_InitialNew")]
+    partial class InitialNew
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -31,11 +31,16 @@ public class UserService : IUserService
 
     public async Task<ServiceResponse<UserDTO>> GetUser(Guid id, CancellationToken cancellationToken = default)
     {
-        var result = await _repository.GetAsync(new UserProjectionSpec(id), cancellationToken); // Get a user using a specification on the repository.
-
+        try { var result = await _repository.GetAsync(new UserProjectionSpec(id), cancellationToken);
+        
         return result != null ? 
             ServiceResponse<UserDTO>.ForSuccess(result) : 
-            ServiceResponse<UserDTO>.FromError(CommonErrors.UserNotFound); // Pack the result or error into a ServiceResponse.
+            ServiceResponse<UserDTO>.FromError(CommonErrors.UserNotFound); 
+        }
+        catch (Exception e) { 
+            return ServiceResponse<UserDTO>.FromError(new(HttpStatusCode.InternalServerError, e.Message, ErrorCodes.EntityNotFound)); } // Catch any exception and pack it as an error response.
+         // Get a user using a specification on the repository.
+// Pack the result or error into a ServiceResponse.
     }
 
     public async Task<ServiceResponse<PagedResponse<UserDTO>>> GetUsers(PaginationSearchQueryParams pagination, CancellationToken cancellationToken = default)

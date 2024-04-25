@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MobyLabWebProgramming.Infrastructure.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialNew : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

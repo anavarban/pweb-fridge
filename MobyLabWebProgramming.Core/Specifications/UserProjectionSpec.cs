@@ -21,7 +21,7 @@ public sealed class UserProjectionSpec : BaseSpec<UserProjectionSpec, User, User
         Email = e.Email,
         Name = e.Name,
         Role = e.Role,
-        Fridge = new FridgeDTO
+        Fridge = e.Fridge != null ? new FridgeDTO
         {
             Id = e.Fridge.Id,
             Name = e.Fridge.Name,
@@ -29,19 +29,23 @@ public sealed class UserProjectionSpec : BaseSpec<UserProjectionSpec, User, User
             CreatedAt = e.Fridge.CreatedAt,
             UpdatedAt = e.Fridge.UpdatedAt,
             Ingredients = e.Fridge.Ingredients,
-        },
+        } : null
     };
 
     public UserProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
     {
+        Query.Include(e => e.Fridge);
     }
 
     public UserProjectionSpec(Guid id) : base(id)
     {
+        Query.Include(e => e.Fridge); // This is an example on how to include related entities in the query.
     }
 
     public UserProjectionSpec(string? search)
     {
+
+        Query.Include(e => e.Fridge);
         search = !string.IsNullOrWhiteSpace(search) ? search.Trim() : null;
 
         if (search == null)

@@ -74,18 +74,24 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
 
         public async Task<ServiceResponse> UpdateIngredient(Guid id, IngredientDTO ingredientDTO, CancellationToken cancellationToken)
         {
-            var result = await _repository.UpdateAsync(new Ingredient
-            {
-                Id = id,
-                Name = ingredientDTO.Name,
-                ExpiryDate = ingredientDTO.ExpiryDate,
-                Quantity = ingredientDTO.Quantity,
-                Unit = ingredientDTO.Unit,
-                Description = ingredientDTO.Description,
-                ImagePath = ingredientDTO.ImagePath,
-            }, cancellationToken);
+            var ingredient = await _repository.GetAsync<Ingredient>(id, cancellationToken);
 
-            return result != null ? ServiceResponse.ForSuccess() : ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Ingredient not found!", ErrorCodes.EntityNotFound));
+            if (ingredient == null)
+            {
+                return ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Ingredient not found!", ErrorCodes.EntityNotFound));
+            }
+
+            ingredient.Name = ingredientDTO.Name;
+            ingredient.ExpiryDate = ingredientDTO.ExpiryDate;
+            ingredient.Quantity = ingredientDTO.Quantity;
+            ingredient.Unit = ingredientDTO.Unit;
+            ingredient.Description = ingredientDTO.Description;
+            ingredient.ImagePath = ingredientDTO.ImagePath;
+
+            await _repository.UpdateAsync(ingredient, cancellationToken);
+
+            return ServiceResponse.ForSuccess();
         }
+
     }
 }

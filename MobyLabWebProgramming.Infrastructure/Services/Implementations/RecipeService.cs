@@ -1,5 +1,6 @@
 ﻿using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
+using MobyLabWebProgramming.Core.Enums;
 using MobyLabWebProgramming.Core.Errors;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Core.Specifications;
@@ -57,6 +58,18 @@ namespace MobyLabWebProgramming.Infrastructure.Services.Implementations
             }, cancellationToken);
 
             return ServiceResponse.ForSuccess();
+        }
+
+        public async Task<ServiceResponse> DeleteRecipe(Guid id, UserDTO? requestingUser, CancellationToken cancellationToken = default)
+        {
+            if (requestingUser == null || requestingUser.Role != UserRoleEnum.Admin)
+            {
+                return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only admins can delete recipes!", ErrorCodes.CannotDelete));
+            }
+
+            var result = await _repository.DeleteAsync<Recipe>(id, cancellationToken);
+
+            return result != 0 ? ServiceResponse.ForSuccess() : ServiceResponse.FromError(new(HttpStatusCode.NotFound, "Recipe not found!", ErrorCodes.EntityNotFound));
         }
     }
 }
